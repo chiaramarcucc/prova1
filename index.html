@@ -222,20 +222,21 @@ function checkAnswer(clickedIndex) {
     let player1Button = document.getElementById("player1");
     let player2Button = document.getElementById("player2");
 
-    let correctIndex = players[currentLevel][0].time < players[currentLevel][1].time ? 0 : 1;
+    // Identifica chi è il più veloce tra i due giocatori
+    let correctIndex = players[currentLevel][0].time < players[currentLevel][1].time ? 1 : 2;
     let buttons = [player1Button, player2Button];
 
     // Disabilita i pulsanti per evitare risposte multiple
     buttons[0].disabled = true;
     buttons[1].disabled = true;
 
-    if (clickedIndex - 1 === correctIndex) {
+    if (clickedIndex === correctIndex) {
         score++;
-        timeLeft += 3; // Aggiunge 3 secondi se la risposta è corretta
+        timeLeft += 3; // Aggiunge 3 secondi in caso di risposta corretta
         document.getElementById("feedback").textContent = "✔ Corretto! +3s 🎉";
-        buttons[correctIndex].classList.add("correct");
+        buttons[correctIndex - 1].classList.add("correct");
     } else {
-        timeLeft = Math.max(0, timeLeft - 1); // Sottrae 1 secondo, ma non scende sotto 0
+        timeLeft = Math.max(0, timeLeft - 1); // Sottrae 1 secondo, evitando che scenda sotto 0
         document.getElementById("feedback").textContent = "✖ Sbagliato! -1s ❌";
         buttons[clickedIndex - 1].classList.add("wrong");
     }
@@ -243,7 +244,7 @@ function checkAnswer(clickedIndex) {
     document.getElementById("score").textContent = score;
     updateTimerUI();
 
-    // Dopo 1 secondo, rimuove le classi di colore e aggiorna i giocatori
+    // Dopo 1 secondo, rimuove le classi di colore e passa al prossimo round
     setTimeout(() => {
         buttons[0].classList.remove("correct", "wrong");
         buttons[1].classList.remove("correct", "wrong");
