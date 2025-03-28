@@ -218,30 +218,39 @@
             document.getElementById("player2").textContent = players[currentLevel][1].name;
         }
 
-        function checkAnswer(clickedIndex) {
-            let correctIndex = players[currentLevel][0].time < players[currentLevel][1].time ? 0 : 1;
-            let buttons = [document.getElementById("player1"), document.getElementById("player2")];
+function checkAnswer(clickedIndex) {
+    let correctIndex = players[currentLevel][0].time < players[currentLevel][1].time ? 0 : 1;
+    let buttons = [document.getElementById("player1"), document.getElementById("player2")];
 
-            if (clickedIndex - 1 === correctIndex) {
-                score++;
-                timeLeft += 2;
-                document.getElementById("feedback").textContent = "✔ Corretto! +2s 🎉";
-                buttons[correctIndex].classList.add("correct");
-            } else {
-                timeLeft -= 2;
-                document.getElementById("feedback").textContent = "✖ Sbagliato! -2s ❌";
-                buttons[clickedIndex - 1].classList.add("wrong");
-            }
+    // Disabilita entrambi i pulsanti appena viene data una risposta
+    buttons[0].disabled = true;
+    buttons[1].disabled = true;
 
-            document.getElementById("score").textContent = score;
-            updateTimerUI();
-            
-            setTimeout(() => {
-                buttons[0].classList.remove("correct", "wrong");
-                buttons[1].classList.remove("correct", "wrong");
-                nextRound();
-            }, 1000);
-        }
+    if (clickedIndex - 1 === correctIndex) {
+        score++;
+        timeLeft += 3;
+        document.getElementById("feedback").textContent = "✔ Corretto! +3s 🎉";
+        buttons[correctIndex].classList.add("correct");
+    } else {
+        timeLeft -= 1;
+        document.getElementById("feedback").textContent = "✖ Sbagliato! -1s ❌";
+        buttons[clickedIndex - 1].classList.add("wrong");
+    }
+
+    document.getElementById("score").textContent = score;
+    updateTimerUI();
+
+    // Dopo 1 secondo, rimuove i colori e aggiorna i nomi, poi riattiva i pulsanti
+    setTimeout(() => {
+        buttons[0].classList.remove("correct", "wrong");
+        buttons[1].classList.remove("correct", "wrong");
+
+        // Riabilita i pulsanti solo dopo aver cambiato i nomi
+        nextRound();
+        buttons[0].disabled = false;
+        buttons[1].disabled = false;
+    }, 1000);
+}
 
         function endGame() {
             document.getElementById("game-container").style.display = "none";
