@@ -228,11 +228,11 @@ function checkAnswer(clickedIndex) {
 
     if (clickedIndex - 1 === correctIndex) {
         score++;
-        timeLeft += 3;
+        timeLeft += 3; // Aumenta il tempo di 3 secondi per risposta corretta
         document.getElementById("feedback").textContent = "✔ Corretto! +3s 🎉";
         buttons[correctIndex].classList.add("correct");
     } else {
-        timeLeft -= 1;
+        timeLeft -= 1; // Riduce il tempo di 1 secondo per risposta sbagliata
         document.getElementById("feedback").textContent = "✖ Sbagliato! -1s ❌";
         buttons[clickedIndex - 1].classList.add("wrong");
     }
