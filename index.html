@@ -228,12 +228,12 @@ function checkAnswer(clickedIndex) {
 
     if (clickedIndex - 1 === correctIndex) {
         score++;
-        timeLeft += 2;
-        document.getElementById("feedback").textContent = "✔ Corretto! +2s 🎉";
+        timeLeft += 3;
+        document.getElementById("feedback").textContent = "✔ Corretto! +3s 🎉";
         buttons[correctIndex].classList.add("correct");
     } else {
-        timeLeft -= 2;
-        document.getElementById("feedback").textContent = "✖ Sbagliato! -2s ❌";
+        timeLeft -= 1;
+        document.getElementById("feedback").textContent = "✖ Sbagliato! -1s ❌";
         buttons[clickedIndex - 1].classList.add("wrong");
     }
 
