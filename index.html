@@ -195,7 +195,7 @@
         }
 
         function updateTimerUI() {
-            document.getElementById("timer").textContent = `Tempo: ${timeLeft}s`;
+            document.getElementById("timer").textContent = Tempo: ${timeLeft}s;
             let progress = (timeLeft / (currentLevel === "facile" ? 10 : currentLevel === "medio" ? 10 : 10)) * 100;
             document.getElementById("progress-bar").style.width = progress + "%";
             
@@ -219,47 +219,42 @@
         }
 
 function checkAnswer(clickedIndex) {
-    let player1Button = document.getElementById("player1");
-    let player2Button = document.getElementById("player2");
+    let correctIndex = players[currentLevel][0].time < players[currentLevel][1].time ? 0 : 1;
+    let buttons = [document.getElementById("player1"), document.getElementById("player2")];
 
-    // Identifica chi è il più veloce tra i due giocatori
-    let correctIndex = players[currentLevel][0].time < players[currentLevel][1].time ? 1 : 2;
-    let buttons = [player1Button, player2Button];
-
-    // Disabilita i pulsanti per evitare risposte multiple
+    // Disabilita entrambi i pulsanti appena viene data una risposta
     buttons[0].disabled = true;
     buttons[1].disabled = true;
 
-    if (clickedIndex === correctIndex) {
+    if (clickedIndex - 1 === correctIndex) {
         score++;
-        timeLeft += 3; // Aggiunge 3 secondi in caso di risposta corretta
-        document.getElementById("feedback").textContent = "✔ Corretto! +3s 🎉";
-        buttons[correctIndex - 1].classList.add("correct");
+        timeLeft += 2;
+        document.getElementById("feedback").textContent = "✔ Corretto! +2s 🎉";
+        buttons[correctIndex].classList.add("correct");
     } else {
-        timeLeft = Math.max(0, timeLeft - 1); // Sottrae 1 secondo, evitando che scenda sotto 0
-        document.getElementById("feedback").textContent = "✖ Sbagliato! -1s ❌";
+        timeLeft -= 2;
+        document.getElementById("feedback").textContent = "✖ Sbagliato! -2s ❌";
         buttons[clickedIndex - 1].classList.add("wrong");
     }
 
     document.getElementById("score").textContent = score;
     updateTimerUI();
 
-    // Dopo 1 secondo, rimuove le classi di colore e passa al prossimo round
+    // Dopo 1 secondo, rimuove i colori e aggiorna i nomi, poi riattiva i pulsanti
     setTimeout(() => {
         buttons[0].classList.remove("correct", "wrong");
         buttons[1].classList.remove("correct", "wrong");
 
-        // Cambia i giocatori per il prossimo round
+        // Riabilita i pulsanti solo dopo aver cambiato i nomi
         nextRound();
-
-        // Riabilita i pulsanti
         buttons[0].disabled = false;
         buttons[1].disabled = false;
     }, 1000);
 }
+
         function endGame() {
             document.getElementById("game-container").style.display = "none";
-            document.getElementById("feedback").textContent = `⏳ Tempo scaduto! Punteggio finale: ${score} 🎯`;
+            document.getElementById("feedback").textContent = ⏳ Tempo scaduto! Punteggio finale: ${score} 🎯;
         }
 
         function restartGame() {
@@ -271,4 +266,3 @@ function checkAnswer(clickedIndex) {
     </script>
 </body>
 </html>
-
