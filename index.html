@@ -62,7 +62,7 @@
         
         const players = {
             facile: [
-            { name: "Valerio Locatelli", time: 568 },
+             { name: "Valerio Locatelli", time: 568 },
             { name: "Daniel Sartori", time: 644 },
             { name: "Giacomo Daniele Corò", time: 660 },
             { name: "Flavio Rimi", time: 726 },
@@ -114,8 +114,7 @@
             { name: "Tommaso Raposio", time: 873 },
             { name: "Carolina Sozio", time: 874 },
             { name: "Dario Angelo Narbone", time: 878 },
-            { name: "Leonardo Carosio", time: 882 }
-            ],
+            { name: "Leonardo Carosio", time: 882 }            ],
             difficile: [
             { name: "Valerio Locatelli", time: 568 },
             { name: "Daniel Sartori", time: 644 },
@@ -164,7 +163,7 @@
             currentLevel = level;
 
             // Imposta il tempo iniziale a seconda del livello
-            timeLeft = level === "facile" ? 10 : level === "medio" ? 10 : 10;
+            timeLeft = level === "facile" ? 15 : level === "medio" ? 10 : 7;
 
             document.getElementById("level-selection").style.display = "none";
             document.getElementById("timer-container").style.display = "block";
@@ -195,8 +194,8 @@
         }
 
         function updateTimerUI() {
-            document.getElementById("timer").textContent = Tempo: ${timeLeft}s;
-            let progress = (timeLeft / (currentLevel === "facile" ? 10 : currentLevel === "medio" ? 10 : 10)) * 100;
+            document.getElementById("timer").textContent = `Tempo: ${timeLeft}s`;
+            let progress = (timeLeft / (currentLevel === "facile" ? 15 : currentLevel === "medio" ? 10 : 7)) * 100;
             document.getElementById("progress-bar").style.width = progress + "%";
             
             if (timeLeft > 5) {
@@ -222,7 +221,7 @@ function checkAnswer(clickedIndex) {
     let correctIndex = players[currentLevel][0].time < players[currentLevel][1].time ? 0 : 1;
     let buttons = [document.getElementById("player1"), document.getElementById("player2")];
 
-    // Disabilita entrambi i pulsanti appena viene data una risposta
+    // Disabilita i pulsanti temporaneamente
     buttons[0].disabled = true;
     buttons[1].disabled = true;
 
@@ -240,7 +239,7 @@ function checkAnswer(clickedIndex) {
     document.getElementById("score").textContent = score;
     updateTimerUI();
 
-    // Dopo 1 secondo, rimuove i colori e aggiorna i nomi, poi riattiva i pulsanti
+    // Dopo 1 secondo, rimuove il colore e aggiorna i nomi
     setTimeout(() => {
         buttons[0].classList.remove("correct", "wrong");
         buttons[1].classList.remove("correct", "wrong");
@@ -251,10 +250,9 @@ function checkAnswer(clickedIndex) {
         buttons[1].disabled = false;
     }, 1000);
 }
-
         function endGame() {
             document.getElementById("game-container").style.display = "none";
-            document.getElementById("feedback").textContent = ⏳ Tempo scaduto! Punteggio finale: ${score} 🎯;
+            document.getElementById("feedback").textContent = `⏳ Tempo scaduto! Punteggio finale: ${score} 🎯`;
         }
 
         function restartGame() {
