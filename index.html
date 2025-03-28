@@ -164,7 +164,7 @@
             currentLevel = level;
 
             // Imposta il tempo iniziale a seconda del livello
-            timeLeft = level === "facile" ? 15 : level === "medio" ? 10 : 7;
+            timeLeft = level === "facile" ? 10 : level === "medio" ? 10 : 10;
 
             document.getElementById("level-selection").style.display = "none";
             document.getElementById("timer-container").style.display = "block";
@@ -196,7 +196,7 @@
 
         function updateTimerUI() {
             document.getElementById("timer").textContent = `Tempo: ${timeLeft}s`;
-            let progress = (timeLeft / (currentLevel === "facile" ? 15 : currentLevel === "medio" ? 10 : 7)) * 100;
+            let progress = (timeLeft / (currentLevel === "facile" ? 10 : currentLevel === "medio" ? 10 : 10)) * 100;
             document.getElementById("progress-bar").style.width = progress + "%";
             
             if (timeLeft > 5) {
