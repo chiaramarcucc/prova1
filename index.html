@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi è il più veloce?</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        h1 { color: #333; }
+        #game-container { margin-top: 50px; }
+        button { 
+            font-size: 20px; 
+            padding: 15px 30px; 
+            margin: 10px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 5px; 
+        }
+        .correct { background-color: green; color: white; }
+        .wrong { background-color: red; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Chi ha risolto il 3x3 più velocemente?</h1>
+    <div id="game-container">
+        <button id="player1" onclick="checkAnswer(1)">Giocatore 1</button>
+        <button id="player2" onclick="checkAnswer(2)">Giocatore 2</button>
+    </div>
+    <p>Punteggio: <span id="score">0</span></p>
+    
+    <script>
+        let score = 0;
+        let players = [
+            { name: "Mario", time: 5 },
+            { name: "Luigi", time: 3 }
+        ];
+
+        function startGame() {
+            shufflePlayers();
+            document.getElementById("player1").textContent = players[0].name;
+            document.getElementById("player2").textContent = players[1].name;
+        }
+
+        function shufflePlayers() {
+            players.sort(() => Math.random() - 0.5);
+        }
+
+        function checkAnswer(clickedIndex) {
+            let correctIndex = players[0].time < players[1].time ? 0 : 1;
+
+            if (clickedIndex - 1 === correctIndex) {
+                score++;
+                alert("Corretto! +1 punto 🎉");
+            } else {
+                alert("Sbagliato! ❌");
+            }
+
+            document.getElementById("score").textContent = score;
+            startGame();
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
