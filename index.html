@@ -3,33 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prova</title>
+    <title>Chi è il più veloce?</title>
     <style>
         body { text-align: center; font-family: Arial, sans-serif; }
         h1 { color: #333; }
-        #game-container { margin-top: 50px; }
+        #game-container { margin-top: 30px; }
         button { 
             font-size: 20px; 
             padding: 15px 30px; 
             margin: 10px; 
             cursor: pointer; 
             border: none; 
-            border-radius: 5px; 
+            border-radius: 5px;
+            transition: background 0.3s;
         }
         .correct { background-color: green; color: white; }
         .wrong { background-color: red; color: white; }
+        #feedback { font-size: 18px; margin-top: 20px; font-weight: bold; }
+        #timer { font-size: 24px; color: #d9534f; font-weight: bold; }
+        #progress-bar-container { width: 80%; background: #ddd; height: 20px; margin: 20px auto; border-radius: 10px; }
+        #progress-bar { width: 100%; height: 100%; background: green; border-radius: 10px; transition: width 0.5s; }
     </style>
 </head>
 <body>
     <h1>Chi ha la miglior media nel 3x3?</h1>
+    <p id="timer">Tempo: 10s</p>
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
     <div id="game-container">
         <button id="player1" onclick="checkAnswer(1)">Giocatore 1</button>
         <button id="player2" onclick="checkAnswer(2)">Giocatore 2</button>
     </div>
+    <p id="feedback"></p>
     <p>Punteggio: <span id="score">0</span></p>
-    
+    <button onclick="startGame()">Rigioca</button>
+
     <script>
         let score = 0;
+        let timeLeft = 10; // Tempo iniziale in secondi
+        let timerInterval;
+        
         let players = [
             { name: "Valerio Locatelli", time: 568 },
             { name: "Daniel Sartori", time: 644 },
@@ -41,63 +55,88 @@
             { name: "Alessandro Nicolì", time: 784 },
             { name: "Davide Pierrat", time: 785 },
             { name: "Alessandro Zangolini", time: 787 },
-            { name: "Giovanni Centili", time: 792 },
-            { name: "Massimiliano Iovane", time: 794 },
-            { name: "Manfredi Italiano", time: 795 },
-            { name: "Mattia Furlan", time: 795 },
-            { name: "Sofia Saletnich", time: 799 },
-            { name: "Leonardo Corbelli", time: 801 },
-            { name: "Sebastiano Tronto", time: 803 },
-            { name: "Alessandro Calzoni", time: 805 },
-            { name: "Alessandro Ricci", time: 805 },
-            { name: "Giovanni Contardi", time: 806 },
-            { name: "Luca Cerrato", time: 806 },
-            { name: "Paolo Marino", time: 814 },
-            { name: "Fabio Rossi", time: 815 },
-            { name: "Vittorio Ribechini", time: 820 },
-            { name: "Luca Brasini", time: 825 },
-            { name: "Christian Crea", time: 827 },
-            { name: "Pietro Furbatto", time: 827 },
-            { name: "Fabian Tomasović", time: 835 },
-            { name: "Nicola Barbaro", time: 840 },
-            { name: "Paolo Moriello", time: 842 },
-            { name: "Gabriele Fabellini", time: 844 },
-            { name: "Yassine Mesraoui", time: 857 },
-            { name: "Andrea Marconato", time: 860 },
-            { name: "Enrico Tenuti", time: 863 },
-            { name: "Alessandro Fava", time: 864 },
-            { name: "Simone Cantarelli", time: 870 },
-            { name: "Tommaso Raposio", time: 873 },
-            { name: "Carolina Sozio", time: 874 },
-            { name: "Dario Angelo Narbone", time: 878 },
-            { name: "Leonardo Carosio", time: 882 }
+            { name: "Giovanni Centili", time: 792 }
         ];
 
         function startGame() {
-            shufflePlayers();
-            document.getElementById("player1").textContent = players[0].name;
-            document.getElementById("player2").textContent = players[1].name;
+            score = 0;
+            timeLeft = 10;
+            document.getElementById("score").textContent = score;
+            document.getElementById("feedback").textContent = "";
+            document.getElementById("game-container").style.display = "block";
+            startTimer();
+            nextRound();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval); // Reset timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            document.getElementById("timer").textContent = `Tempo: ${timeLeft}s`;
+            let progress = (timeLeft / 10) * 100; // Calcola la percentuale
+            document.getElementById("progress-bar").style.width = progress + "%";
+            
+            // Cambia colore in base al tempo rimanente
+            if (timeLeft > 5) {
+                document.getElementById("progress-bar").style.background = "green";
+            } else if (timeLeft > 2) {
+                document.getElementById("progress-bar").style.background = "orange";
+            } else {
+                document.getElementById("progress-bar").style.background = "red";
+            }
         }
 
         function shufflePlayers() {
             players.sort(() => Math.random() - 0.5);
         }
 
+        function nextRound() {
+            shufflePlayers();
+            document.getElementById("player1").textContent = players[0].name;
+            document.getElementById("player2").textContent = players[1].name;
+        }
+
         function checkAnswer(clickedIndex) {
             let correctIndex = players[0].time < players[1].time ? 0 : 1;
+            let buttons = [document.getElementById("player1"), document.getElementById("player2")];
 
             if (clickedIndex - 1 === correctIndex) {
                 score++;
-                alert("Corretto! +1 punto 🎉");
+                timeLeft += 2; // Aggiungi 2 secondi
+                document.getElementById("feedback").textContent = "✔ Corretto! +2s 🎉";
+                buttons[correctIndex].classList.add("correct");
             } else {
-                alert("Sbagliato! ❌");
+                timeLeft -= 2; // Sottrai 2 secondi
+                document.getElementById("feedback").textContent = "✖ Sbagliato! -2s ❌";
+                buttons[clickedIndex - 1].classList.add("wrong");
             }
 
             document.getElementById("score").textContent = score;
-            startGame();
+            updateTimerUI();
+            
+            setTimeout(() => {
+                buttons[0].classList.remove("correct", "wrong");
+                buttons[1].classList.remove("correct", "wrong");
+                nextRound();
+            }, 1000);
         }
 
-        startGame();
+        function endGame() {
+            document.getElementById("game-container").style.display = "none";
+            document.getElementById("feedback").textContent = `⏳ Tempo scaduto! Punteggio finale: ${score} 🎯`;
+        }
+
+        startGame(); // Avvia il gioco automaticamente
     </script>
 </body>
 </html>
